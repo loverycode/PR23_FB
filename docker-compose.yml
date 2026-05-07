@@ -1,0 +1,38 @@
+services:
+  backend1:
+    build: ./backend
+    environment:
+      - SERVER_ID=1
+    networks:
+      - app-network
+
+  backend2:
+    build: ./backend
+    environment:
+      - SERVER_ID=2
+    networks:
+      - app-network
+
+  backend3:
+    build: ./backend
+    environment:
+      - SERVER_ID=3
+    networks:
+      - app-network
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx-config:/etc/nginx/conf.d:ro
+    depends_on:
+      - backend1
+      - backend2
+      - backend3
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
